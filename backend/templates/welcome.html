@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Welcome to Pathwise</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f8fafc;
+        font-family: Arial, sans-serif;
+        color: #23272f;
+      }
+      .container {
+        background: #fff;
+        max-width: 540px;
+        margin: 40px auto 0 auto;
+        padding: 32px 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(28,50,82,0.07);
+      }
+      .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo img {
+        width: 76px;
+      }
+      h1 {
+        color: #3264e7;
+        font-size: 1.8em;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      p {
+        font-size: 1.07em;
+        line-height: 1.6;
+      }
+      .button {
+        background: #3264e7;
+        color: #fff;
+        text-decoration: none;
+        padding: 12px 32px;
+        border-radius: 24px;
+        font-weight: bold;
+        display: inline-block;
+        margin: 25px 0 12px 0;
+        text-align: center;
+      }
+      .footer {
+        margin-top: 28px;
+        font-size: 0.95em;
+        color: #8c98a5;
+        text-align: center;
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 16px 4vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <!-- You may add your logo here if desired -->
+        <!-- <img src="https://yourdomain.com/logo.png" alt="Pathwise" /> -->
+      </div>
+      <h1>Welcome to Pathwise!</h1>
+      <p>
+        Hi {{userName}},
+        <br><br>
+        Thank you for registering with <strong>Pathwise</strong> – your AI-powered guide to smarter, faster learning.<br>
+        We're excited for you to start your learning journey!
+      </p>
+      <p><strong>Click below to get started and set your first learning goal:</strong></p>
+      <p style="text-align:center;">
+        <a href="{{loginLink}}" class="button">Go to Pathwise</a>
+      </p>
+      <p>If you didn’t sign up for this account, you can safely ignore this email.</p>
+      <div class="footer">
+        &copy; 2025 Pathwise<br>
+        <a href="https://yourwebsite.com" style="color:#8c98a5; text-decoration:underline;">Visit Pathwise</a>
+      </div>
+    </div>
+  </body>
+</html>
