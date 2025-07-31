@@ -14,7 +14,8 @@ const __dirname = path.dirname(__filename)
 const templatePath = path.join(__dirname, '../templates/welcome.html');
 const verifyTemplatePath = path.join(__dirname,"../templates/accountVerified.html")
 const verificationOtpPath = path.join(__dirname,"../templates/verificationOtp.html")
-
+const passwordResetOtpPath = path.join(__dirname,"../templates/passwordResetOtp.html")
+const passwordResetPath = path.join(__dirname,"../templates/passwordReset.html")
 
 export const register = async  (req, res) => {
     const {name, email, password} = req.body
@@ -216,4 +217,111 @@ export const verifyEmail = async (req,res)=>{
     }catch(error){
         return res.json({success : false , message : error.message})
     }
+}
+
+export const isAuthenticated = async(req,res)=>{
+    try{
+        return res.json({success:true})
+    }catch(error){
+        return res.json({success : false , message : error.message})
+    }
+}
+
+export const sendResetOtp = async (req,res)=>{
+    const {email} = req.body
+
+    if(!email){
+        return res.json({success : false , message : "Email is required"})
+    }
+
+    try{
+        const user = await userModel.findOne({email})
+        if(!user){
+            return res.json({success : false , message : "User not found"})
+        }
+
+        const otp = String(Math.floor(100000 + Math.random()*900000))
+
+        user.resetOtp = otp
+        user.resetOtpExpiredAt = Date.now() + 15*60*1000
+
+        await user.save()
+
+        let html = fs.readFileSync(passwordResetOtpPath, 'utf8')
+        html = html.replace("{{userName}}", user.name)
+        html = html.replace("{{otp}}", otp);
+        html = html.replace("{{loginLink}}", "https://pathwise.com/login")
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: "Your OTP Code – Pathwise ",
+            html: html
+        }
+
+        await transporter.sendMail(mailOption)
+
+        return res.json({success :true , message : "OTP sent to your email"})
+
+
+    }catch(error){
+        return res.json({success : false , message : error.message})
+    }
+}
+
+export const resetPassword = async (req,res)=>{
+    const {email ,otp, newPassword} = req.body
+
+    if(!email){
+        return res.json({success : false , message : "Email is required"})
+    }
+    if(!otp){
+        return res.json({success : false , message : "OTP is required"})
+    }
+    if(!newPassword){
+        return res.json({success : false , message : "New Password is required"})
+    }
+
+    try{
+        const user = await userModel.findOne({email})
+        if(!user){
+            return res.json({success:  false , message : "User not found"})
+        }
+
+        if(user.resetOtp === "" || user.resetOtp !== otp){
+            return res.json({success : false , message : "Invalid OTP"})
+        }
+
+        if(user.resetOtpExpiredAt<Date.now()){
+            return res.json({success : false , message : "OTP expired"})
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword , 10)
+
+        user.password = hashedPassword
+        user.resetOtp = ""
+        user.resetOtpExpiredAt = 0;
+
+        await user.save()
+
+        let html = fs.readFileSync(passwordResetPath, 'utf8')
+        html = html.replace("{{userName}}", user.name)
+        html = html.replace("{{loginLink}}", "https://pathwise.com/login")
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: "Password Successfully Reset – Pathwise",
+            html: html
+        }
+
+        await transporter.sendMail(mailOption)
+
+        return res.json({success : true , message : "Password has been reset successfully"})
+
+    }catch(error){
+        return res.json({success : false , message : error.message})
+    }
+
+
 }
