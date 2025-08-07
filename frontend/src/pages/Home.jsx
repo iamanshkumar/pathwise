@@ -1,21 +1,30 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import Header from '../components/Header'
-import PromptBox from '../components/PromptBox'
-import About from '../components/About'
+import React, { useRef } from 'react';
+import Navbar from '../components/Navbar';
+import Header from '../components/Header';
+import PromptBox from '../components/PromptBox';
+import About from '../components/About';
 
 const Home = () => {
+  const aboutRef = useRef(null);
+
+  const scrollToAbout = () => {
+    if (aboutRef.current) {
+      aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <div className='flex flex-col justify-center items-center gap-3.5 min-h-screen bg-white'>
-        <Navbar></Navbar>
-        <Header></Header>
-        <PromptBox></PromptBox>
+        <Navbar scrollToAbout={scrollToAbout} />
+        <Header />
+        <PromptBox />
       </div>
-      <About></About>
+      <div ref={aboutRef}>
+        <About />
+      </div>
     </>
-    
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
