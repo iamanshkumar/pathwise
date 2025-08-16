@@ -9,6 +9,27 @@ import { toast } from 'react-toastify';
 const Navbar = ({ scrollToAbout }) => {
   const navigate = useNavigate()
   const {userData,backendUrl,setUserData,setIsLoggedIn} = useContext(AppContext)
+
+  const sendVerificationOtp = async()=>{
+    try{
+
+      axios.defaults.withCredentials = true;
+
+      const response = await axios.post(backendUrl + "/api/auth/send-verify-otp")
+      const data = response.data
+
+      if(data.success){
+        navigate("/email-verify")
+        toast.success(data.message)
+      }else{
+        toast.error(data.message)
+      }
+
+    }catch(error){
+      toast.error(error.message)
+    }
+  }
+
   const logout = async()=>{
     try{
       axios.defaults.withCredentials=true
@@ -35,7 +56,7 @@ const Navbar = ({ scrollToAbout }) => {
         {userData.name[0].toUpperCase()}
         <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10 text-[14px] w-36'>
           <ul className='list-none m-1 p-2.5 bg-black text-white rounded'>
-            {!userData.isVerified && <li className='py-1 px-2 cursor-pointer'>Verify Email</li>}
+            {!userData.isVerified && <li className='py-1 px-2 cursor-pointer' onClick={sendVerificationOtp}>Verify Email</li>}
             
             <li onClick={logout} className='py-1 px-2 cursor-pointer pr-10'>Logout</li>
           </ul>
