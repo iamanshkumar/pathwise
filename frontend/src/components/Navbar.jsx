@@ -10,6 +10,10 @@ const Navbar = ({ scrollToAbout }) => {
   const navigate = useNavigate()
   const {userData,backendUrl,setUserData,setIsLoggedIn} = useContext(AppContext)
 
+  const home = ()=>{
+    navigate("/")
+  }
+
   const sendVerificationOtp = async()=>{
     try{
 
@@ -43,8 +47,8 @@ const Navbar = ({ scrollToAbout }) => {
   }
 
   return (
-    <div className='w-full flex justify-between items-center p-3.5 sm:p-3.5 sm:px-4 absolute top-0 '>
-      <div>
+    <div className='w-full flex justify-between items-center p-3.5 sm:p-3.5 sm:px-4 absolute top-0 hover:cursor-pointer '>
+      <div onClick={home}>
         <h1 className='flex gap-1.5 justify-center items-baseline text-3xl sm:text-3xl font-semibold'>
           <img className='w-8' src={assets.logo} alt="logo" />
           Pathwise

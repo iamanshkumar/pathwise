@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import connectDB from "./config/mongodb.js"
 import authRouter from "./routes/authRoutes.js"
 import userRouter from "./routes/userRoutes.js"
-
+import roadmapRoutes from "./routes/roadmapRoutes.js"
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -23,6 +23,7 @@ app.get("/",(req,res)=>{
 })
 app.use("/api/auth" , authRouter)
 app.use("/api/user" , userRouter)
+app.use("/api", roadmapRoutes)
 
 app.listen(port , ()=>{
     console.log(`Severer is running at port : ${port}`)
